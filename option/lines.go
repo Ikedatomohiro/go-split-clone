@@ -7,13 +7,13 @@ import (
 	"split-clone/util"
 )
 
-func Lines(file *os.File, line int, prefix string, fileName string) {
+var lineCount int64 = 0
+
+func Lines(file *os.File, line int64, prefix string, fileName string) {
 	scanner := bufio.NewScanner(file)
-	lineCount := 0
 	outFile, err := os.Create(fmt.Sprintf(prefix + fileName))
 	for scanner.Scan() {
 		lineCount++
-
 		if lineCount > line {
 			lineCount = 1
 			outFile.Close()
