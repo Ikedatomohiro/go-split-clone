@@ -43,11 +43,11 @@ func main() {
 	// ファイルを分割する
 	switch input.Option {
 	case "l":
-		op.Lines(input, file, fileName)
+		op.Lines(input, file)
 	case "n":
-		op.Numbers(input, info, file, fileName)
+		op.Numbers(input, info, file)
 	case "b":
-		op.Bytes(input, file, fileName)
+		op.Bytes(input, file)
 	default:
 		fmt.Fprintln(os.Stderr, "split: invalid option")
 		os.Exit(1)

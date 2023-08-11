@@ -16,13 +16,15 @@ var (
 	unit      int64
 	line      int64
 	prefix    string
+	fileName  string
 )
 
-func Lines(in in.Input, file *os.File, fileName string) {
+func Lines(in in.Input, file *os.File) {
 	scanner := bufio.NewScanner(file)
+	fileName = setDefaultFileName(in)
+	prefix = in.Prefix
 	outFile, err := os.Create(fmt.Sprintf(prefix + fileName))
 	line = in.OptionValue
-	prefix = in.Prefix
 	for scanner.Scan() {
 		lineCount++
 		if lineCount > line {
@@ -44,8 +46,9 @@ func Lines(in in.Input, file *os.File, fileName string) {
 	}
 }
 
-func Bytes(in in.Input, file *os.File, fileName string) {
+func Bytes(in in.Input, file *os.File) {
 	reader := bufio.NewReader(file)
+	fileName = setDefaultFileName(in)
 	prefix = in.Prefix
 	unit = int64(in.OptionValue)
 	bytes := make([]byte, in.OptionValue)
@@ -58,12 +61,13 @@ func Bytes(in in.Input, file *os.File, fileName string) {
 	}
 }
 
-func Numbers(in in.Input, info fs.FileInfo, file *os.File, fileName string) {
+func Numbers(in in.Input, info fs.FileInfo, file *os.File) {
 	fileSize := info.Size()
 	unit = fileSize / int64(in.OptionValue)
 	remainder := fileSize % int64(in.OptionValue)
 	bytes := make([]byte, unit)
 	reader := bufio.NewReader(file)
+	fileName = setDefaultFileName(in)
 	prefix = in.Prefix
 	lineCount = 0
 	for lineCount < in.OptionValue {
