@@ -7,7 +7,6 @@ import (
 
 	in "split-clone/input"
 	op "split-clone/option"
-	vl "split-clone/validation"
 )
 
 var (
@@ -21,12 +20,12 @@ func main() {
 	start := time.Now()
 	// 入力情報を処理
 	args := os.Args
-	optionExist, err := vl.CheckInput(args)
+	optionExist, err := in.CheckInput(args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	input = vl.GetParam(args, optionExist)
+	input = in.GetParam(args, optionExist)
 	// ファイルを読み込む
 	file, err := os.Open(input.FileName)
 	if err != nil {

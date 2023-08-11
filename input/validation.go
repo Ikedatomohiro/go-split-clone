@@ -1,4 +1,4 @@
-package validation
+package input
 
 import (
 	"errors"
@@ -7,8 +7,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	in "split-clone/input"
 )
 
 var (
@@ -62,7 +60,7 @@ func CheckInput(args []string) (optionExist bool, err error) {
 	return optionExist, nil
 }
 
-func GetParam(args []string, optionExsits bool) (input in.Input) {
+func GetParam(args []string, optionExsits bool) (input Input) {
 	if optionExsits {
 		arg := args[1]
 		pattern := `^\d+[kmgKMG]$`
@@ -85,14 +83,14 @@ func GetParam(args []string, optionExsits bool) (input in.Input) {
 			val, _ := strconv.Atoi(args[2])
 			optionValue = int64(val)
 		}
-		input = in.Input{
+		input = Input{
 			Option:      string([]byte{arg[1]}),
 			OptionValue: optionValue,
 			Uint:        args[2],
 			FileName:    args[3],
 		}
 	} else {
-		input = in.Input{Option: "l", OptionValue: 1000, FileName: args[1]}
+		input = Input{Option: "l", OptionValue: 1000, FileName: args[1]}
 	}
 	return input
 }
