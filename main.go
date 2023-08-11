@@ -40,38 +40,18 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	// 分割する単位を決定
-	var unit int64
-	var line int64
 	// ファイルを分割する
-	// 出力先のファイル名を決定
-
-	fileName := "xaa"
-	if input.Prefix != "" {
-		fileName = "aa"
-	}
-	// fmt.Println(prefix, fileName)
-	// os.Exit(1)
 	switch input.Option {
 	case "l":
-		line = input.OptionValue
-		op.Lines(file, line, prefix, fileName)
+		op.Lines(input, file, fileName)
 	case "n":
-		// ファイルサイズを取得
-		fileSize := info.Size()
-		unit = fileSize / int64(input.OptionValue)
-		bytes := make([]byte, input.OptionValue)
-		op.Bytes(file, bytes, prefix, fileName)
+		op.Numbers(input, info, file, fileName)
 	case "b":
-		unit = int64(input.OptionValue)
-		bytes := make([]byte, input.OptionValue)
-		op.Bytes(file, bytes, prefix, fileName)
+		op.Bytes(input, file, fileName)
 	default:
 		fmt.Fprintln(os.Stderr, "split: invalid option")
 		os.Exit(1)
 	}
-	fmt.Println(unit, line)
 	elapsed := time.Since(start)
 	fmt.Printf("elapsed time: %v\n", elapsed)
-	os.Exit(1)
 }
