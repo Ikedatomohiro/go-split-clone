@@ -84,7 +84,6 @@ func GetParam(args []string, optionExsits bool) (input Input) {
 		input = Input{
 			Option:      string([]byte{arg[1]}),
 			OptionValue: optionValue,
-			Uint:        args[2],
 			FileName:    args[3],
 		}
 	} else {
