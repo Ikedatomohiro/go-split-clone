@@ -3,7 +3,6 @@ package input
 import (
 	"errors"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -16,9 +15,8 @@ var (
 
 func CheckInput(args []string) (optionExist bool, err error) {
 	// 引数がない場合はエラーを出力して終了
-	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "split: missing file operand")
-		os.Exit(1)
+	if len(args[1:]) == 0 {
+		return false, errors.New("split: missing file operand")
 	}
 	fileNameExist := false
 	for i, arg := range args[1:] {
