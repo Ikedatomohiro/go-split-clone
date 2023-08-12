@@ -19,7 +19,7 @@ var (
 	fileName  string
 )
 
-func Lines(in in.Input, file *os.File) {
+func Lines(in in.Input, file *os.File) error {
 	scanner := bufio.NewScanner(file)
 	fileName = setDefaultFileName(in)
 	prefix = in.Prefix
@@ -33,35 +33,38 @@ func Lines(in in.Input, file *os.File) {
 			fileName = util.GetFilename(fileName)
 			outFile, err = os.Create(fmt.Sprintf(prefix + fileName))
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				os.Exit(1)
+				return err
 			}
 			defer outFile.Close()
 		}
 		outFile.WriteString(scanner.Text() + "\n")
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
+	return nil
 }
 
-func Bytes(in in.Input, file *os.File) {
+func Bytes(in in.Input, file *os.File) error {
 	reader := bufio.NewReader(file)
 	fileName = setDefaultFileName(in)
 	prefix = in.Prefix
 	unit = int64(in.OptionValue)
 	bytes := make([]byte, in.OptionValue)
 	for {
-		end := outputBytes(reader, bytes, prefix, fileName)
+		end, err := outputBytes(reader, bytes, prefix, fileName)
+		if err != nil {
+			return err
+		}
 		if end {
 			break
 		}
 		fileName = util.GetFilename(fileName)
 	}
+	return nil
 }
 
-func Numbers(in in.Input, info fs.FileInfo, file *os.File) {
+func Numbers(in in.Input, info fs.FileInfo, file *os.File) error {
 	fileSize := info.Size()
 	unit = fileSize / int64(in.OptionValue)
 	remainder := fileSize % int64(in.OptionValue)
@@ -74,38 +77,38 @@ func Numbers(in in.Input, info fs.FileInfo, file *os.File) {
 		if lineCount == in.OptionValue-1 {
 			bytes = make([]byte, unit+remainder)
 		}
-		end := outputBytes(reader, bytes, prefix, fileName)
+		end, err := outputBytes(reader, bytes, prefix, fileName)
+		if err != nil {
+			return err
+		}
 		if end {
 			break
 		}
 		fileName = util.GetFilename(fileName)
 		lineCount++
 	}
+	return nil
 }
 
-func outputBytes(reader *bufio.Reader, bytes []byte, prefix string, fileName string) (end bool) {
+func outputBytes(reader *bufio.Reader, bytes []byte, prefix string, fileName string) (end bool, err error) {
 	n, err := io.ReadFull(reader, bytes)
 	if err != nil {
 		if err == io.ErrUnexpectedEOF {
 			// EOFに達し、要求したバイト数が読み取られなかった場合
 			err = ioutil.WriteFile(prefix+fileName, bytes[:n], 0644)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				os.Exit(1)
+				return true, err
 			}
 		} else if err != io.EOF {
-			// EOFでない他のエラー
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return false, err
 		}
-		return true
+		return true, nil
 	}
 	err = ioutil.WriteFile(prefix+fileName, bytes, 0644)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return false, err
 	}
-	return false
+	return false, nil
 }
 
 func setDefaultFileName(in in.Input) string {

@@ -42,11 +42,23 @@ func main() {
 	// ファイルを分割する
 	switch input.Option {
 	case "l":
-		op.Lines(input, file)
+		err := op.Lines(input, file)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	case "n":
-		op.Numbers(input, info, file)
+		err := op.Numbers(input, info, file)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	case "b":
-		op.Bytes(input, file)
+		err := op.Bytes(input, file)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	default:
 		fmt.Fprintln(os.Stderr, "split: invalid option")
 		os.Exit(1)
