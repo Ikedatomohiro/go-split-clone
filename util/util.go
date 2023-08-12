@@ -1,5 +1,10 @@
 package util
 
+import (
+	"fmt"
+	"os"
+)
+
 func GetFilename(name string) string {
 	if name == "" {
 		return "aaa"
@@ -18,4 +23,9 @@ func GetFilename(name string) string {
 		}
 	}
 	return string(bytes)
+}
+
+func ShowUsage() {
+	fmt.Println("Usage: split [OPTION]... [FILE] [PREFIX]")
+	os.Exit(1)
 }
