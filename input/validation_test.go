@@ -62,6 +62,12 @@ func TestCheckInput(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:    "failure: オプション設定の誤り",
+			args:    []string{"split", "-l", "100m", "-n", "3", "test.txt"},
+			want:    true,
+			wantErr: true,
+		},
+		{
 			name:    "failure: 引数なし",
 			args:    []string{"split"},
 			want:    false,
