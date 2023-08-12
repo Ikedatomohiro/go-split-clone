@@ -6,7 +6,7 @@ import (
 	"time"
 
 	in "split-clone/input"
-	op "split-clone/option"
+	sp "split-clone/split"
 )
 
 var (
@@ -33,34 +33,10 @@ func main() {
 		os.Exit(1)
 	}
 	defer file.Close()
-	// ファイルの情報を取得
-	info, err := file.Stat()
+	// ファイルを分割する
+	err = sp.Split(input, file)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-	// ファイルを分割する
-	switch input.Option {
-	case "l":
-		err := op.Lines(input, file)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	case "n":
-		err := op.Numbers(input, info, file)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	case "b":
-		err := op.Bytes(input, file)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	default:
-		fmt.Fprintln(os.Stderr, "split: invalid option")
 		os.Exit(1)
 	}
 	elapsed := time.Since(start)

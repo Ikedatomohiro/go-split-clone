@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/fs"
 	"io/ioutil"
 	"os"
 	in "split-clone/input"
@@ -64,7 +63,11 @@ func Bytes(in in.Input, file *os.File) error {
 	return nil
 }
 
-func Numbers(in in.Input, info fs.FileInfo, file *os.File) error {
+func Numbers(in in.Input, file *os.File) error {
+	info, err := file.Stat()
+	if err != nil {
+		return err
+	}
 	fileSize := info.Size()
 	unit = fileSize / int64(in.OptionValue)
 	remainder := fileSize % int64(in.OptionValue)
