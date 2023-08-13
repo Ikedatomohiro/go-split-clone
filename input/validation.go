@@ -62,8 +62,8 @@ func CheckInput(args []string) (e Exist, err error) {
 	return e, nil
 }
 
-func GetParam(args []string, optionExsits bool) (input Input) {
-	if optionExsits {
+func GetParam(args []string, e Exist) (input Input) {
+	if e.Option {
 		arg := args[1]
 		pattern := `^\d+[kmgKMG]$`
 		re := regexp.MustCompile(pattern)
@@ -92,6 +92,9 @@ func GetParam(args []string, optionExsits bool) (input Input) {
 		}
 	} else {
 		input = Input{Option: "l", OptionValue: 1000, FileName: args[1]}
+	}
+	if e.Prefix {
+		input.Prefix = args[4]
 	}
 	return input
 }

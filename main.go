@@ -25,7 +25,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	input = in.GetParam(args, e.Option)
+	input = in.GetParam(args, e)
 	// ファイルを読み込む
 	file, err := os.Open(input.FileName)
 	if err != nil {
