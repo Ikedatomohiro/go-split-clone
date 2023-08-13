@@ -44,6 +44,18 @@ func TestCheckInput(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "success: -lオプション + prefix",
+			args:    []string{"split", "-l", "100", "test.txt", "sample_"},
+			want:    in.Exist{Option: true, Prefix: true, FileName: true},
+			wantErr: false,
+		},
+		{
+			name:    "failure: -lオプション + prefixの後にも引数がある",
+			args:    []string{"split", "-l", "100", "test.txt", "sample_", "dummy"},
+			want:    in.Exist{Option: true, Prefix: true, FileName: true},
+			wantErr: true,
+		},
+		{
 			name:    "success: ファイルを開く時にファイルなしのエラーとなる",
 			args:    []string{"split", "b", "1000", "test.txt"},
 			want:    in.Exist{Option: false, Prefix: false, FileName: true},
