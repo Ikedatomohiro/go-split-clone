@@ -12,20 +12,20 @@ import (
 var (
 	fileName string
 	input    in.Input
-	exist    in.Exist
 	prefix   string
+	e        in.Exist
 )
 
 func main() {
 	start := time.Now()
 	// 入力情報を処理
 	args := os.Args
-	optionExist, err := in.CheckInput(args)
+	e, err := in.CheckInput(args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	input = in.GetParam(args, optionExist)
+	input = in.GetParam(args, e.Option)
 	// ファイルを読み込む
 	file, err := os.Open(input.FileName)
 	if err != nil {

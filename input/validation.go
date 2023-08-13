@@ -9,35 +9,39 @@ import (
 )
 
 var (
-	optionExist = false
 	optionValue int64
 )
 
-func CheckInput(args []string) (optionExist bool, err error) {
+func CheckInput(args []string) (e Exist, err error) {
+	e = Exist{}
 	// 引数がない場合はエラーを出力して終了
 	if len(args[1:]) == 0 {
-		return false, errors.New("split: missing file operand")
+		return e, errors.New("split: missing file operand")
 	}
-	fileNameExist := false
 	for i, arg := range args[1:] {
-		// すでにoptionとfileNameがある場合はエラー
-		if optionExist && fileNameExist {
-			return optionExist, errors.New("Too many arguments")
+		// すでにoptionとfileNameがある場合はprefixとみなす
+		if e.Option && e.FileName {
+			// prefixがすでにある場合はエラー
+			if e.Prefix {
+				return e, errors.New("Too many arguments")
+			}
+			e.Prefix = true
+			continue
 		}
 		// optionかどうか
 		if strings.HasPrefix(arg, "-") {
-			if optionExist || fileNameExist {
-				return optionExist, errors.New("Invalid ption")
+			if e.Option || e.FileName {
+				return e, errors.New("Invalid option")
 			}
-			optionExist = true
+			e.Option = true
 			// optionは、-l, -n, -bのいずれか
 			if arg != "-l" && arg != "-n" && arg != "-b" {
-				return optionExist, errors.New("Invalid option 2")
+				return e, errors.New("Invalid option 2")
 			}
 			// optionの次の引数があるか
 			if i+2 >= len(args) {
 				fmt.Println("optionsss: ", arg, i, i+2, len(args))
-				return optionExist, errors.New("Need number after option")
+				return e, errors.New("Need number after option")
 			}
 			// optionの次は整数またはオプションが-bの時はk,m,gをつけた整数
 			pattern := `^\d+$`
@@ -46,16 +50,16 @@ func CheckInput(args []string) (optionExist bool, err error) {
 			}
 			re := regexp.MustCompile(pattern)
 			if !re.MatchString(args[i+2]) {
-				return optionExist, errors.New("Invalid option number")
+				return e, errors.New("Invalid option number")
 			}
 		} else {
-			if optionExist && i == 1 {
+			if e.Option && i == 1 {
 				continue
 			}
-			fileNameExist = true
+			e.FileName = true
 		}
 	}
-	return optionExist, nil
+	return e, nil
 }
 
 func GetParam(args []string, optionExsits bool) (input Input) {

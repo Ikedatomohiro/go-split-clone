@@ -8,6 +8,7 @@ type Input struct {
 }
 
 type Exist struct {
-	Option bool
-	Prefix bool
+	Option   bool
+	Prefix   bool
+	FileName bool
 }
