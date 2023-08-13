@@ -59,6 +59,9 @@ func CheckInput(args []string) (e Exist, err error) {
 			e.FileName = true
 		}
 	}
+	if !e.FileName {
+		return e, errors.New("split: missing file operand")
+	}
 	return e, nil
 }
 

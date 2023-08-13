@@ -56,6 +56,12 @@ func TestCheckInput(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:    "failure: オプション・数値の後にファイル名がない",
+			args:    []string{"split", "-l", "100"},
+			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			wantErr: true,
+		},
+		{
 			name:    "success: ファイルを開く時にファイルなしのエラーとなる",
 			args:    []string{"split", "b", "1000", "test.txt"},
 			want:    in.Exist{Option: false, Prefix: false, FileName: true},
