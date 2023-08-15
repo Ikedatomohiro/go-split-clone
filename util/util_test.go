@@ -21,14 +21,14 @@ func TestGetFilename(t *testing.T) {
 	}{
 		{
 			name:    "success",
-			args:    "xaa",
-			want:    "xab",
+			args:    "aa",
+			want:    "ab",
 			wantErr: false,
 		},
 		{
 			name:    "success: zの処理",
-			args:    "xaz",
-			want:    "xba",
+			args:    "az",
+			want:    "ba",
 			wantErr: false,
 		},
 		{

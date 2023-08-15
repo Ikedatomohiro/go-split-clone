@@ -18,9 +18,13 @@ var (
 	fileName  string
 )
 
+const (
+	defaultFileName = "aa"
+)
+
 func Lines(in in.Input, file *os.File) error {
 	scanner := bufio.NewScanner(file)
-	fileName = setDefaultFileName(in)
+	fileName = defaultFileName
 	prefix = in.Prefix
 	outFile, err := os.Create(fmt.Sprintf(prefix + fileName))
 	line = in.OptionValue
@@ -46,7 +50,7 @@ func Lines(in in.Input, file *os.File) error {
 
 func Bytes(in in.Input, file *os.File) error {
 	reader := bufio.NewReader(file)
-	fileName = setDefaultFileName(in)
+	fileName = defaultFileName
 	prefix = in.Prefix
 	unit = int64(in.OptionValue)
 	bytes := make([]byte, in.OptionValue)
@@ -73,7 +77,7 @@ func Numbers(in in.Input, file *os.File) error {
 	remainder := fileSize % int64(in.OptionValue)
 	bytes := make([]byte, unit)
 	reader := bufio.NewReader(file)
-	fileName = setDefaultFileName(in)
+	fileName = defaultFileName
 	prefix = in.Prefix
 	lineCount = 0
 	for lineCount < in.OptionValue {
@@ -112,15 +116,4 @@ func outputBytes(reader *bufio.Reader, bytes []byte, prefix string, fileName str
 		return false, err
 	}
 	return false, nil
-}
-
-func setDefaultFileName(in in.Input) string {
-	fileName := "xaa"
-	if in.Prefix != "" {
-		fileName = "aa"
-	}
-	if fileName == "" {
-		return "aaa"
-	}
-	return fileName
 }

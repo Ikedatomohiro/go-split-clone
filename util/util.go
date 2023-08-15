@@ -41,24 +41,28 @@ func GetParam(args []string, e ip.Exist) (in ip.Input) {
 			Option:      string([]byte{arg[1]}),
 			OptionValue: optionValue,
 			FileName:    args[3],
+			Prefix:      "x",
 		}
 		if e.Prefix {
 			in.Prefix = args[4]
 		}
 	} else {
-		in = ip.Input{Option: "l", OptionValue: 1000, FileName: args[1]}
+		in = ip.Input{
+			Option:      "l",
+			OptionValue: 1000,
+			FileName:    args[1],
+			Prefix:      "x",
+		}
 		if e.Prefix {
 			in.Prefix = args[2]
 		}
 	}
-	fmt.Println("o: ", e)
-	fmt.Println("in: ", in)
 	return in
 }
 
 func GetFilename(name string) string {
 	if name == "" {
-		return "aaa"
+		return "aa"
 	}
 
 	bytes := []byte(name)
@@ -77,6 +81,6 @@ func GetFilename(name string) string {
 }
 
 func ShowUsage() {
-	fmt.Println("Usage: split [OPTION]... [FILE] [PREFIX]")
+	fmt.Println("Usage: go run main.go [OPTION] [FILE [PREFIX]]")
 	os.Exit(1)
 }
