@@ -50,6 +50,24 @@ func TestCheckInput(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "success: オプションなし、プレフィックスあり",
+			args:    []string{"split", "test.txt", "sample_"},
+			want:    in.Exist{Option: false, Prefix: true, FileName: true},
+			wantErr: false,
+		},
+		{
+			name:    "failure: オプションなし、プレフィックスの後にオプション引数がある",
+			args:    []string{"split", "test.txt", "sample_", "-b", "1000"},
+			want:    in.Exist{Option: false, Prefix: true, FileName: true},
+			wantErr: true,
+		},
+		{
+			name:    "failure: 引数なし",
+			args:    []string{"split"},
+			want:    in.Exist{Option: false, Prefix: false, FileName: false},
+			wantErr: true,
+		},
+		{
 			name:    "failure: -lオプション + prefixの後にも引数がある",
 			args:    []string{"split", "-l", "100", "test.txt", "sample_", "dummy"},
 			want:    in.Exist{Option: true, Prefix: true, FileName: true},
@@ -62,7 +80,7 @@ func TestCheckInput(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "success: ファイルを開く時にファイルなしのエラーとなる",
+			name:    "success: チェックは通過。ファイルを開く時にファイルなしのエラーとなる",
 			args:    []string{"split", "b", "1000", "test.txt"},
 			want:    in.Exist{Option: false, Prefix: false, FileName: true},
 			wantErr: false,
@@ -80,15 +98,9 @@ func TestCheckInput(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "failure: オプション設定の誤り",
+			name:    "failure: オプション設定が多すぎる誤り",
 			args:    []string{"split", "-l", "100m", "-n", "3", "test.txt"},
 			want:    in.Exist{Option: true, Prefix: false, FileName: true},
-			wantErr: true,
-		},
-		{
-			name:    "failure: 引数なし",
-			args:    []string{"split"},
-			want:    in.Exist{Option: false, Prefix: false, FileName: false},
 			wantErr: true,
 		},
 	}
