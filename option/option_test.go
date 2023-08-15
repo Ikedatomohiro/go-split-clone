@@ -29,7 +29,7 @@ func TestLines(t *testing.T) {
 				Option:      "l",
 				OptionValue: 1,
 				FileName:    "test.txt",
-				Prefix:      "",
+				Prefix:      "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{
@@ -91,7 +91,7 @@ func TestBytes(t *testing.T) {
 				Option:      "b",
 				OptionValue: 5,
 				FileName:    "test.txt",
-				Prefix:      "",
+				Prefix:      "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{
@@ -154,7 +154,7 @@ func TestNumbers(t *testing.T) {
 				Option:      "n",
 				OptionValue: 2,
 				FileName:    "test.txt",
-				Prefix:      "",
+				Prefix:      "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{
