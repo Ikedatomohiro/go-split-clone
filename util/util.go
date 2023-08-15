@@ -11,6 +11,7 @@ import (
 
 var (
 	optionValue int64
+	prefix      string
 )
 
 func GetParam(args []string, e ip.Exist) (in ip.Input) {
@@ -41,12 +42,17 @@ func GetParam(args []string, e ip.Exist) (in ip.Input) {
 			OptionValue: optionValue,
 			FileName:    args[3],
 		}
+		if e.Prefix {
+			in.Prefix = args[4]
+		}
 	} else {
 		in = ip.Input{Option: "l", OptionValue: 1000, FileName: args[1]}
+		if e.Prefix {
+			in.Prefix = args[2]
+		}
 	}
-	if e.Prefix {
-		in.Prefix = args[4]
-	}
+	fmt.Println("o: ", e)
+	fmt.Println("in: ", in)
 	return in
 }
 

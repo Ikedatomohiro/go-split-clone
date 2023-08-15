@@ -76,31 +76,31 @@ func TestValidateInputt(t *testing.T) {
 		{
 			name:    "failure: オプション・数値の後にファイル名がない",
 			args:    []string{"split", "-l", "100"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.Exist{Option: true, Prefix: false, FileName: false},
 			wantErr: true,
 		},
 		{
-			name:    "success: チェックは通過。ファイルを開く時にファイルなしのエラーとなる",
+			name:    "success: チェックは通過。ファイルを開く時にファイルなしのエラーとなる(bをファイル名、1000をprefixとみなす)",
 			args:    []string{"split", "b", "1000", "test.txt"},
-			want:    in.Exist{Option: false, Prefix: false, FileName: true},
+			want:    in.Exist{Option: false, Prefix: true, FileName: true},
 			wantErr: false,
 		},
 		{
 			name:    "failure: オプション設定の誤り",
 			args:    []string{"split", "-bn", "100m", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.Exist{Option: true, Prefix: false, FileName: false},
 			wantErr: true,
 		},
 		{
 			name:    "failure: オプション設定の誤り",
 			args:    []string{"split", "-l", "100m", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.Exist{Option: true, Prefix: false, FileName: false},
 			wantErr: true,
 		},
 		{
 			name:    "failure: オプション設定が多すぎる誤り",
 			args:    []string{"split", "-l", "100m", "-n", "3", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.Exist{Option: true, Prefix: false, FileName: false},
 			wantErr: true,
 		},
 	}
@@ -111,8 +111,8 @@ func TestValidateInputt(t *testing.T) {
 				t.Errorf("ValidateInput() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got.Option != tt.want.Option {
-				t.Errorf("ValidateInput() got = %v, want %v", got.Option, tt.want.Option)
+			if got != tt.want {
+				t.Errorf("ValidateInput() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

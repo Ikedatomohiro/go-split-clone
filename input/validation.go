@@ -51,6 +51,10 @@ func ValidateInput(args []string) (e Exist, err error) {
 			if e.Option && i == 1 {
 				continue
 			}
+			if e.FileName {
+				e.Prefix = true
+				continue
+			}
 			e.FileName = true
 		}
 	}
