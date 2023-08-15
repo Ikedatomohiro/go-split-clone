@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func CheckInput(args []string) (e Exist, err error) {
+func ValidateInput(args []string) (e Exist, err error) {
 	e = Exist{}
 	// 引数がない場合はエラーを出力して終了
 	if len(args[1:]) == 0 {

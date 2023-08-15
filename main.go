@@ -21,7 +21,7 @@ func main() {
 	start := time.Now()
 	// 入力情報を処理
 	args := os.Args
-	e, err := in.CheckInput(args)
+	e, err := in.ValidateInput(args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
