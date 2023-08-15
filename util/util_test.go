@@ -19,6 +19,18 @@ func TestGetFilename(t *testing.T) {
 			want:    "xab",
 			wantErr: false,
 		},
+		{
+			name:    "success: zの処理",
+			args:    "xaz",
+			want:    "xba",
+			wantErr: false,
+		},
+		{
+			name:    "success: zの処理",
+			args:    "zzz",
+			want:    "aaaa",
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
