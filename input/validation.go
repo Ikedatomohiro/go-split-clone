@@ -2,41 +2,40 @@ package input
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strings"
 )
 
-func ValidateInput(args []string) (e Exist, err error) {
-	e = Exist{}
+func ValidateInput(args []string) (ap ArgPosition, err error) {
+	ap = ArgPosition{}
 	// 引数がない場合はエラーを出力して終了
-	if len(args[1:]) == 0 {
-		return e, errors.New("split: missing file operand")
+	if len(args) == 1 {
+		return ap, errors.New("split: missing file operand")
 	}
-	for i, arg := range args[1:] {
+	for i := 1; i < len(args); i++ {
+		arg := args[i]
 		// すでにoptionとfileNameがある場合はprefixとみなす
-		if e.Option && e.FileName {
+		if ap.Option > 0 && ap.FileName > 0 {
 			// prefixがすでにある場合はエラー
-			if e.Prefix {
-				return e, errors.New("Too many arguments")
+			if ap.Prefix > 0 {
+				return ap, errors.New("Too many arguments")
 			}
-			e.Prefix = true
+			ap.Prefix = i
 			continue
 		}
 		// optionかどうか
 		if strings.HasPrefix(arg, "-") {
-			if e.Option || e.FileName {
-				return e, errors.New("Invalid option")
+			if ap.Option > 0 || ap.FileName > 0 {
+				return ap, errors.New("Invalid option")
 			}
-			e.Option = true
+			ap.Option = i
 			// optionは、-l, -n, -bのいずれか
 			if arg != "-l" && arg != "-n" && arg != "-b" {
-				return e, errors.New("Invalid option 2")
+				return ap, errors.New("Invalid option 2")
 			}
 			// optionの次の引数があるか
-			if i+2 >= len(args) {
-				fmt.Println("optionsss: ", arg, i, i+2, len(args))
-				return e, errors.New("Need number after option")
+			if i > len(args) {
+				return ap, errors.New("Need number after option")
 			}
 			// optionの次は整数またはオプションが-bの時はk,m,gをつけた整数
 			pattern := `^\d+$`
@@ -44,22 +43,22 @@ func ValidateInput(args []string) (e Exist, err error) {
 				pattern = `^\d+[kmgKMG]?$`
 			}
 			re := regexp.MustCompile(pattern)
-			if !re.MatchString(args[i+2]) {
-				return e, errors.New("Invalid option number")
+			if !re.MatchString(args[i+1]) {
+				return ap, errors.New("Invalid option number")
 			}
 		} else {
-			if e.Option && i == 1 {
+			if ap.Option > 0 && i == ap.Option+1 {
 				continue
 			}
-			if e.FileName {
-				e.Prefix = true
+			if ap.FileName > 0 {
+				ap.Prefix = i
 				continue
 			}
-			e.FileName = true
+			ap.FileName = i
 		}
 	}
-	if !e.FileName {
-		return e, errors.New("split: missing file operand")
+	if ap.FileName < 1 {
+		return ap, errors.New("split: missing file operand")
 	}
-	return e, nil
+	return ap, nil
 }

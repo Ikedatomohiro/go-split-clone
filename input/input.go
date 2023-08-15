@@ -1,14 +1,16 @@
 package input
 
 type Input struct {
-	Option      string
-	OptionValue int64
-	FileName    string
-	Prefix      string
+	Option       string
+	OptionValue  int64
+	SuffixLength int
+	FileName     string
+	Prefix       string
 }
 
-type Exist struct {
-	Option   bool
-	Prefix   bool
-	FileName bool
+type ArgPosition struct {
+	Option   int
+	AOption  int
+	Prefix   int
+	FileName int
 }

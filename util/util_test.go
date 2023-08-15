@@ -9,7 +9,7 @@ import (
 
 type GetParamArgs struct {
 	args []string
-	e    in.Exist
+	ap   in.ArgPosition
 }
 
 func TestGetFilename(t *testing.T) {
@@ -59,43 +59,61 @@ func TestGetParam(t *testing.T) {
 			name: "success: オプションなし、プレフィックスなし（-l 1000のオプションをデフォルトとする）",
 			args: GetParamArgs{
 				args: []string{"split", "test.txt"},
-				e:    in.Exist{Option: false, Prefix: false, FileName: true},
+				ap:   in.ArgPosition{Option: 0, Prefix: 0, FileName: 1},
 			},
-			want:    in.Input{Option: "l", OptionValue: 1000, FileName: "test.txt", Prefix: ""},
+			want:    in.Input{Option: "l", OptionValue: 1000, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "3000", "test.txt"},
-				e:    in.Exist{Option: true, Prefix: false, FileName: true},
+				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			},
-			want:    in.Input{Option: "b", OptionValue: 3000, FileName: "test.txt", Prefix: ""},
+			want:    in.Input{Option: "b", OptionValue: 3000, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "300m", "test.txt"},
-				e:    in.Exist{Option: true, Prefix: false, FileName: true},
+				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			},
-			want:    in.Input{Option: "b", OptionValue: 300000000, FileName: "test.txt", Prefix: ""},
+			want:    in.Input{Option: "b", OptionValue: 300000000, FileName: "test.txt", Prefix: "x"},
+			wantErr: false,
+		},
+		{
+			name: "success: オプションあり、プレフィックスなし",
+			args: GetParamArgs{
+				args: []string{"split", "-b", "300k", "test.txt"},
+				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+			},
+			want:    in.Input{Option: "b", OptionValue: 300000, FileName: "test.txt", Prefix: "x"},
+			wantErr: false,
+		},
+		{
+			name: "success: オプションあり、プレフィックスなし",
+			args: GetParamArgs{
+				args: []string{"split", "-b", "3G", "test.txt"},
+				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+			},
+			want:    in.Input{Option: "b", OptionValue: 3000000000, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-n", "3", "test.txt"},
-				e:    in.Exist{Option: true, Prefix: false, FileName: true},
+				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			},
-			want:    in.Input{Option: "n", OptionValue: 3, FileName: "test.txt", Prefix: ""},
+			want:    in.Input{Option: "n", OptionValue: 3, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションなし、プレフィックスあり",
 			args: GetParamArgs{
 				args: []string{"split", "test.txt", "sample_"},
-				e:    in.Exist{Option: false, Prefix: true, FileName: true},
+				ap:   in.ArgPosition{Option: 0, Prefix: 2, FileName: 1},
 			},
 			want:    in.Input{Option: "l", OptionValue: 1000, FileName: "test.txt", Prefix: "sample_"},
 			wantErr: false,
@@ -104,7 +122,7 @@ func TestGetParam(t *testing.T) {
 			name: "success: オプションあり、プレフィックスあり",
 			args: GetParamArgs{
 				args: []string{"split", "-n", "3", "test.txt", "sample_"},
-				e:    in.Exist{Option: true, Prefix: true, FileName: true},
+				ap:   in.ArgPosition{Option: 1, Prefix: 4, FileName: 3},
 			},
 			want:    in.Input{Option: "n", OptionValue: 3, FileName: "test.txt", Prefix: "sample_"},
 			wantErr: false,
@@ -112,7 +130,7 @@ func TestGetParam(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ut.GetParam(tt.args.args, tt.args.e)
+			got := ut.GetParam(tt.args.args, tt.args.ap)
 			if got != tt.want {
 				t.Errorf("GetParam() got = %v, want %v", got, tt.want)
 			}

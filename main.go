@@ -14,7 +14,7 @@ var (
 	fileName string
 	input    in.Input
 	prefix   string
-	e        in.Exist
+	e        in.ArgPosition
 )
 
 func main() {

@@ -10,97 +10,97 @@ func TestValidateInputt(t *testing.T) {
 	var tests = []struct {
 		name    string
 		args    []string
-		want    in.Exist
+		want    in.ArgPosition
 		wantErr bool
 	}{
 		{
 			name:    "success: -lオプション",
 			args:    []string{"split", "-l", "100", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			wantErr: false,
 		},
 		{
 			name:    "success: オプションなし",
 			args:    []string{"split", "test.txt"},
-			want:    in.Exist{Option: false, Prefix: false, FileName: true},
+			want:    in.ArgPosition{Option: 0, Prefix: 0, FileName: 1},
 			wantErr: false,
 		},
 		{
 			name:    "success: -nオプション",
 			args:    []string{"split", "-n", "3", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			wantErr: false,
 		},
 		{
 			name:    "success: -bオプション",
 			args:    []string{"split", "-b", "3000", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			wantErr: false,
 		},
 		{
 			name:    "success: -bオプション m",
 			args:    []string{"split", "-b", "100m", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
 			wantErr: false,
 		},
 		{
 			name:    "success: -lオプション + prefix",
 			args:    []string{"split", "-l", "100", "test.txt", "sample_"},
-			want:    in.Exist{Option: true, Prefix: true, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 4, FileName: 3},
 			wantErr: false,
 		},
 		{
 			name:    "success: オプションなし、プレフィックスあり",
 			args:    []string{"split", "test.txt", "sample_"},
-			want:    in.Exist{Option: false, Prefix: true, FileName: true},
+			want:    in.ArgPosition{Option: 0, Prefix: 2, FileName: 1},
 			wantErr: false,
 		},
 		{
 			name:    "failure: オプションなし、プレフィックスの後にオプション引数がある",
 			args:    []string{"split", "test.txt", "sample_", "-b", "1000"},
-			want:    in.Exist{Option: false, Prefix: true, FileName: true},
+			want:    in.ArgPosition{Option: 0, Prefix: 2, FileName: 1},
 			wantErr: true,
 		},
 		{
 			name:    "failure: 引数なし",
 			args:    []string{"split"},
-			want:    in.Exist{Option: false, Prefix: false, FileName: false},
+			want:    in.ArgPosition{Option: 0, Prefix: 0, FileName: 0},
 			wantErr: true,
 		},
 		{
 			name:    "failure: -lオプション + prefixの後にも引数がある",
 			args:    []string{"split", "-l", "100", "test.txt", "sample_", "dummy"},
-			want:    in.Exist{Option: true, Prefix: true, FileName: true},
+			want:    in.ArgPosition{Option: 1, Prefix: 4, FileName: 3},
 			wantErr: true,
 		},
 		{
 			name:    "failure: オプション・数値の後にファイル名がない",
 			args:    []string{"split", "-l", "100"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: false},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 0},
 			wantErr: true,
 		},
 		{
 			name:    "success: チェックは通過。ファイルを開く時にファイルなしのエラーとなる(bをファイル名、1000をprefixとみなす)",
 			args:    []string{"split", "b", "1000", "test.txt"},
-			want:    in.Exist{Option: false, Prefix: true, FileName: true},
+			want:    in.ArgPosition{Option: 0, Prefix: 3, FileName: 1},
 			wantErr: false,
 		},
 		{
 			name:    "failure: オプション設定の誤り",
 			args:    []string{"split", "-bn", "100m", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: false},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 0},
 			wantErr: true,
 		},
 		{
 			name:    "failure: オプション設定の誤り",
 			args:    []string{"split", "-l", "100m", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: false},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 0},
 			wantErr: true,
 		},
 		{
 			name:    "failure: オプション設定が多すぎる誤り",
 			args:    []string{"split", "-l", "100m", "-n", "3", "test.txt"},
-			want:    in.Exist{Option: true, Prefix: false, FileName: false},
+			want:    in.ArgPosition{Option: 1, Prefix: 0, FileName: 0},
 			wantErr: true,
 		},
 	}

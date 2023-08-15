@@ -14,15 +14,15 @@ var (
 	prefix      string
 )
 
-func GetParam(args []string, e ip.Exist) (in ip.Input) {
-	if e.Option {
-		arg := args[1]
+func GetParam(args []string, ap ip.ArgPosition) (in ip.Input) {
+	if ap.Option > 0 {
+		arg := args[ap.Option]
 		pattern := `^\d+[kmgKMG]$`
 		re := regexp.MustCompile(pattern)
-
-		if arg == "-b" && re.MatchString(args[2]) {
-			unit := strings.ToUpper(args[2][len(args[2])-1:])
-			value, _ := strconv.Atoi(args[2][:len(args[2])-1])
+		num := args[ap.Option+1]
+		if arg == "-b" && re.MatchString(num) {
+			unit := strings.ToUpper(num[len(num)-1:])
+			value, _ := strconv.Atoi(num[:len(num)-1])
 			switch unit {
 			case "K":
 				optionValue = int64(value * 1000)
@@ -34,27 +34,27 @@ func GetParam(args []string, e ip.Exist) (in ip.Input) {
 				optionValue = int64(value)
 			}
 		} else {
-			val, _ := strconv.Atoi(args[2])
+			val, _ := strconv.Atoi(args[ap.Option+1])
 			optionValue = int64(val)
 		}
 		in = ip.Input{
-			Option:      string([]byte{arg[1]}),
+			Option:      string([]byte{arg[ap.Option]}),
 			OptionValue: optionValue,
-			FileName:    args[3],
+			FileName:    args[ap.FileName],
 			Prefix:      "x",
 		}
-		if e.Prefix {
-			in.Prefix = args[4]
+		if ap.Prefix > 0 {
+			in.Prefix = args[ap.Prefix]
 		}
 	} else {
 		in = ip.Input{
 			Option:      "l",
 			OptionValue: 1000,
-			FileName:    args[1],
+			FileName:    args[ap.FileName],
 			Prefix:      "x",
 		}
-		if e.Prefix {
-			in.Prefix = args[2]
+		if ap.Prefix > 0 {
+			in.Prefix = args[ap.Prefix]
 		}
 	}
 	return in
@@ -64,7 +64,6 @@ func GetFilename(name string) string {
 	if name == "" {
 		return "aa"
 	}
-
 	bytes := []byte(name)
 	for i := len(bytes) - 1; i >= 0; i-- {
 		if bytes[i] < 'z' {
