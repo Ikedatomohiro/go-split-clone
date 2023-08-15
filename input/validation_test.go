@@ -6,7 +6,7 @@ import (
 	in "split-clone/input"
 )
 
-func TestCheckInput(t *testing.T) {
+func TestValidateInputt(t *testing.T) {
 	var tests = []struct {
 		name    string
 		args    []string
@@ -106,13 +106,13 @@ func TestCheckInput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := in.CheckInput(tt.args)
+			got, err := in.ValidateInput(tt.args)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("CheckInput() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ValidateInput() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got.Option != tt.want.Option {
-				t.Errorf("CheckInput() got = %v, want %v", got.Option, tt.want.Option)
+				t.Errorf("ValidateInput() got = %v, want %v", got.Option, tt.want.Option)
 			}
 		})
 	}

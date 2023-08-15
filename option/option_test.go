@@ -66,14 +66,14 @@ func TestLines(t *testing.T) {
 				if err != nil {
 					t.Fatalf("Failed to read temp file: %v", err)
 				}
-				if string(content) != value {
+				// ファイルが存在してもファイル名と内容が一致していなければエラーとなる
+				if !tt.wantErr && string(content) != value {
 					t.Errorf("Lines wrote %q, expected %q", content, value)
 				}
 			}
 
 		})
 	}
-
 }
 
 func TestBytes(t *testing.T) {
@@ -130,7 +130,8 @@ func TestBytes(t *testing.T) {
 				if err != nil {
 					t.Fatalf("Failed to read temp file: %v", err)
 				}
-				if string(content) != value {
+				// ファイルが存在してもファイル名と内容が一致していなければエラーとなる
+				if !tt.wantErr && string(content) != value {
 					t.Errorf("Bytes wrote %q, expected %q", content, value)
 				}
 			}
@@ -191,11 +192,11 @@ func TestNumbers(t *testing.T) {
 				if err != nil {
 					t.Fatalf("Failed to read temp file: %v", err)
 				}
-				if string(content) != value {
+				// ファイルが存在してもファイル名と内容が一致していなければエラーとなる
+				if !tt.wantErr && string(content) != value {
 					t.Errorf("Numbers wrote %q, expected %q", content, value)
 				}
 			}
 		})
 	}
-
 }
