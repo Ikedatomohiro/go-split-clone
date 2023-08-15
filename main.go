@@ -7,6 +7,7 @@ import (
 
 	in "split-clone/input"
 	sp "split-clone/split"
+	ut "split-clone/util"
 )
 
 var (
@@ -25,7 +26,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	input = in.GetParam(args, e)
+	input = ut.GetParam(args, e)
 	// ファイルを読み込む
 	file, err := os.Open(input.FileName)
 	if err != nil {

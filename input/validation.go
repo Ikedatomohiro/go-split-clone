@@ -4,12 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
-)
-
-var (
-	optionValue int64
 )
 
 func CheckInput(args []string) (e Exist, err error) {
@@ -63,41 +58,4 @@ func CheckInput(args []string) (e Exist, err error) {
 		return e, errors.New("split: missing file operand")
 	}
 	return e, nil
-}
-
-func GetParam(args []string, e Exist) (input Input) {
-	if e.Option {
-		arg := args[1]
-		pattern := `^\d+[kmgKMG]$`
-		re := regexp.MustCompile(pattern)
-
-		if arg == "-b" && re.MatchString(args[2]) {
-			unit := strings.ToUpper(args[2][len(args[2])-1:])
-			value, _ := strconv.Atoi(args[2][:len(args[2])-1])
-			switch unit {
-			case "K":
-				optionValue = int64(value * 1000)
-			case "M":
-				optionValue = int64(value * 1000000)
-			case "G":
-				optionValue = int64(value * 1000000000)
-			default:
-				optionValue = int64(value)
-			}
-		} else {
-			val, _ := strconv.Atoi(args[2])
-			optionValue = int64(val)
-		}
-		input = Input{
-			Option:      string([]byte{arg[1]}),
-			OptionValue: optionValue,
-			FileName:    args[3],
-		}
-	} else {
-		input = Input{Option: "l", OptionValue: 1000, FileName: args[1]}
-	}
-	if e.Prefix {
-		input.Prefix = args[4]
-	}
-	return input
 }
