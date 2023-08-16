@@ -3,6 +3,7 @@ package input
 import (
 	"errors"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -25,12 +26,15 @@ func ValidateInput(args []string) (ap ArgPosition, err error) {
 		}
 		// optionかどうか
 		if strings.HasPrefix(arg, "-") {
-			if ap.Option > 0 || ap.FileName > 0 {
+			if ap.FileName > 0 {
 				return ap, errors.New("Invalid option")
 			}
-			ap.Option = i
 			// optionは、-l, -n, -bのいずれか
-			if arg != "-l" && arg != "-n" && arg != "-b" {
+			if (arg == "-l" || arg == "-n" || arg == "-b") && ap.Option == 0 {
+				ap.Option = i
+			} else if arg == "-a" && ap.AOption == 0 {
+				ap.AOption = i
+			} else {
 				return ap, errors.New("Invalid option 2")
 			}
 			// optionの次の引数があるか
@@ -46,8 +50,14 @@ func ValidateInput(args []string) (ap ArgPosition, err error) {
 			if !re.MatchString(args[i+1]) {
 				return ap, errors.New("Invalid option number")
 			}
+			if arg == "-a" {
+				num, _ := strconv.Atoi(args[i+1])
+				if num < 1 {
+					return ap, errors.New("Invalid option number")
+				}
+			}
 		} else {
-			if ap.Option > 0 && i == ap.Option+1 {
+			if (ap.Option > 0 && i == ap.Option+1) || (ap.AOption > 0 && i == ap.AOption+1) {
 				continue
 			}
 			if ap.FileName > 0 {
@@ -60,5 +70,7 @@ func ValidateInput(args []string) (ap ArgPosition, err error) {
 	if ap.FileName < 1 {
 		return ap, errors.New("split: missing file operand")
 	}
+	// fmt.Println(ap)
+	// os.Exit(1000)
 	return ap, nil
 }

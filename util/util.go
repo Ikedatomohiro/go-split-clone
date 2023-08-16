@@ -1,8 +1,6 @@
 package util
 
 import (
-	"fmt"
-	"os"
 	"regexp"
 	ip "split-clone/input"
 	"strconv"
@@ -15,6 +13,13 @@ var (
 )
 
 func GetParam(args []string, ap ip.ArgPosition) (in ip.Input) {
+	in = ip.Input{
+		Option:       "l",
+		OptionValue:  1000,
+		SuffixLength: 2,
+		FileName:     args[ap.FileName],
+		Prefix:       "x",
+	}
 	if ap.Option > 0 {
 		arg := args[ap.Option]
 		pattern := `^\d+[kmgKMG]$`
@@ -37,25 +42,19 @@ func GetParam(args []string, ap ip.ArgPosition) (in ip.Input) {
 			val, _ := strconv.Atoi(args[ap.Option+1])
 			optionValue = int64(val)
 		}
-		in = ip.Input{
-			Option:      string([]byte{arg[ap.Option]}),
-			OptionValue: optionValue,
-			FileName:    args[ap.FileName],
-			Prefix:      "x",
-		}
+		in.Option = strings.TrimPrefix(args[ap.Option], "-")
+		in.OptionValue = optionValue
+		in.FileName = args[ap.FileName]
+		in.Prefix = "x"
 		if ap.Prefix > 0 {
 			in.Prefix = args[ap.Prefix]
 		}
-	} else {
-		in = ip.Input{
-			Option:      "l",
-			OptionValue: 1000,
-			FileName:    args[ap.FileName],
-			Prefix:      "x",
-		}
-		if ap.Prefix > 0 {
-			in.Prefix = args[ap.Prefix]
-		}
+	}
+	if ap.AOption > 0 {
+		in.SuffixLength, _ = strconv.Atoi(args[ap.AOption+1])
+	}
+	if ap.Prefix > 0 {
+		in.Prefix = args[ap.Prefix]
 	}
 	return in
 }
@@ -79,7 +78,6 @@ func GetFilename(name string) string {
 	return string(bytes)
 }
 
-func ShowUsage() {
-	fmt.Println("Usage: go run main.go [OPTION] [FILE [PREFIX]]")
-	os.Exit(1)
+func GetDefaultFileName(num int) string {
+	return strings.Repeat("a", num)
 }

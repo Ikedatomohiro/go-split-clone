@@ -26,10 +26,11 @@ func TestLines(t *testing.T) {
 			name:        "success",
 			fileContent: "test samples\ntest",
 			args: in.Input{
-				Option:      "l",
-				OptionValue: 1,
-				FileName:    "test.txt",
-				Prefix:      "x",
+				Option:       "l",
+				OptionValue:  1,
+				SuffixLength: 2,
+				FileName:     "test.txt",
+				Prefix:       "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{
@@ -88,10 +89,11 @@ func TestBytes(t *testing.T) {
 			name:        "success",
 			fileContent: "test samples",
 			args: in.Input{
-				Option:      "b",
-				OptionValue: 5,
-				FileName:    "test.txt",
-				Prefix:      "x",
+				Option:       "b",
+				OptionValue:  5,
+				SuffixLength: 2,
+				FileName:     "test.txt",
+				Prefix:       "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{
@@ -151,10 +153,11 @@ func TestNumbers(t *testing.T) {
 			name:        "success",
 			fileContent: "test samples test",
 			args: in.Input{
-				Option:      "n",
-				OptionValue: 2,
-				FileName:    "test.txt",
-				Prefix:      "x",
+				Option:       "n",
+				OptionValue:  2,
+				SuffixLength: 2,
+				FileName:     "test.txt",
+				Prefix:       "x",
 			},
 			wantResult: Result{
 				fileContents: map[string]string{

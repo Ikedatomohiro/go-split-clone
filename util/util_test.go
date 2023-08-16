@@ -59,72 +59,81 @@ func TestGetParam(t *testing.T) {
 			name: "success: オプションなし、プレフィックスなし（-l 1000のオプションをデフォルトとする）",
 			args: GetParamArgs{
 				args: []string{"split", "test.txt"},
-				ap:   in.ArgPosition{Option: 0, Prefix: 0, FileName: 1},
+				ap:   in.ArgPosition{Option: 0, FileName: 1, Prefix: 0},
 			},
-			want:    in.Input{Option: "l", OptionValue: 1000, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "l", OptionValue: 1000, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "3000", "test.txt"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 0},
 			},
-			want:    in.Input{Option: "b", OptionValue: 3000, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "b", OptionValue: 3000, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "300m", "test.txt"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 0},
 			},
-			want:    in.Input{Option: "b", OptionValue: 300000000, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "b", OptionValue: 300000000, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "300k", "test.txt"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 0},
 			},
-			want:    in.Input{Option: "b", OptionValue: 300000, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "b", OptionValue: 300000, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-b", "3G", "test.txt"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 0},
 			},
-			want:    in.Input{Option: "b", OptionValue: 3000000000, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "b", OptionValue: 3000000000, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスなし",
 			args: GetParamArgs{
 				args: []string{"split", "-n", "3", "test.txt"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 0, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 0},
 			},
-			want:    in.Input{Option: "n", OptionValue: 3, FileName: "test.txt", Prefix: "x"},
+			want:    in.Input{Option: "n", OptionValue: 3, SuffixLength: 2, FileName: "test.txt", Prefix: "x"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションなし、プレフィックスあり",
 			args: GetParamArgs{
 				args: []string{"split", "test.txt", "sample_"},
-				ap:   in.ArgPosition{Option: 0, Prefix: 2, FileName: 1},
+				ap:   in.ArgPosition{Option: 0, FileName: 1, Prefix: 2},
 			},
-			want:    in.Input{Option: "l", OptionValue: 1000, FileName: "test.txt", Prefix: "sample_"},
+			want:    in.Input{Option: "l", OptionValue: 1000, SuffixLength: 2, FileName: "test.txt", Prefix: "sample_"},
 			wantErr: false,
 		},
 		{
 			name: "success: オプションあり、プレフィックスあり",
 			args: GetParamArgs{
 				args: []string{"split", "-n", "3", "test.txt", "sample_"},
-				ap:   in.ArgPosition{Option: 1, Prefix: 4, FileName: 3},
+				ap:   in.ArgPosition{Option: 1, FileName: 3, Prefix: 4},
 			},
-			want:    in.Input{Option: "n", OptionValue: 3, FileName: "test.txt", Prefix: "sample_"},
+			want:    in.Input{Option: "n", OptionValue: 3, SuffixLength: 2, FileName: "test.txt", Prefix: "sample_"},
+			wantErr: false,
+		},
+		{
+			name: "success: オプションあり(-n, -a)、プレフィックスあり",
+			args: GetParamArgs{
+				args: []string{"split", "-n", "3", "-a", "5", "test.txt", "sample_"},
+				ap:   in.ArgPosition{Option: 1, AOption: 3, FileName: 5, Prefix: 6},
+			},
+			want:    in.Input{Option: "n", OptionValue: 3, SuffixLength: 5, FileName: "test.txt", Prefix: "sample_"},
 			wantErr: false,
 		},
 	}
