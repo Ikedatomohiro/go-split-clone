@@ -68,6 +68,12 @@ func TestValidateInputt(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:    "failure: -aオプション -aオプション + prefix",
+			args:    []string{"split", "-a", "1", "-a", "5", "test.txt", "sample_"},
+			want:    in.ArgPosition{Option: 0, AOption: 1, FileName: 0, Prefix: 0},
+			wantErr: true,
+		},
+		{
 			name:    "success: オプションなし、プレフィックスあり",
 			args:    []string{"split", "test.txt", "sample_"},
 			want:    in.ArgPosition{Option: 0, AOption: 0, FileName: 1, Prefix: 2},
