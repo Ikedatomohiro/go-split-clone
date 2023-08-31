@@ -12,8 +12,8 @@ var (
 	prefix      string
 )
 
-func GetParam(args []string, ap ip.ArgPosition) (in ip.Input) {
-	in = ip.Input{
+func GetParam(args []string, ap ip.ArgPosition) ip.Input {
+	in := ip.Input{
 		Option:       "l",
 		OptionValue:  1000,
 		SuffixLength: 2,

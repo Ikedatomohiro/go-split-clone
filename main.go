@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	in "split-clone/input"
 	sp "split-clone/split"
@@ -18,7 +17,6 @@ var (
 )
 
 func main() {
-	start := time.Now()
 	// 入力情報を処理
 	args := os.Args
 	e, err := in.ValidateInput(args)
@@ -40,6 +38,4 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	elapsed := time.Since(start)
-	fmt.Printf("elapsed time: %v\n", elapsed)
 }

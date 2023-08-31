@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-func ValidateInput(args []string) (ap ArgPosition, err error) {
-	ap = ArgPosition{}
+func ValidateInput(args []string) (ArgPosition, error) {
+	ap := ArgPosition{}
 	// 引数がない場合はエラーを出力して終了
 	if len(args) == 1 {
 		return ap, errors.New("split: missing file operand")
@@ -70,7 +70,5 @@ func ValidateInput(args []string) (ap ArgPosition, err error) {
 	if ap.FileName < 1 {
 		return ap, errors.New("split: missing file operand")
 	}
-	// fmt.Println(ap)
-	// os.Exit(1000)
 	return ap, nil
 }

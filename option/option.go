@@ -93,7 +93,7 @@ func Numbers(in in.Input, file *os.File) error {
 	return nil
 }
 
-func outputBytes(reader *bufio.Reader, bytes []byte, prefix string, fileName string) (end bool, err error) {
+func outputBytes(reader *bufio.Reader, bytes []byte, prefix string, fileName string) (bool, error) {
 	n, err := io.ReadFull(reader, bytes)
 	if err != nil {
 		if err == io.ErrUnexpectedEOF {
